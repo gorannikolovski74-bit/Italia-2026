@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italia 2026 — Family Trip Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0f0d;
+  --bg2: #111a15;
+  --bg3: #162019;
+  --card: #1a2820;
+  --card2: #1f3028;
+  --accent: #4eca7f;
+  --accent2: #2a9d5c;
+  --accent3: #a8e6c2;
+  --gold: #d4a843;
+  --gold2: #f0c96a;
+  --text: #e8f5ee;
+  --text2: #9bbfaa;
+  --text3: #5d8a6e;
+  --border: rgba(78,202,127,0.12);
+  --border2: rgba(78,202,127,0.22);
+  --red: #e05c5c;
+  --blue: #5ba3d9;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* HEADER */
+.header {
+  padding: 2rem 2.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, rgba(78,202,127,0.04) 0%, transparent 100%);
+}
+.header-left h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  line-height: 1;
+}
+.header-left h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.header-left p {
+  font-size: 0.8rem;
+  color: var(--text3);
+  margin-top: 0.4rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.header-badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.badge {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.72rem;
+  color: var(--text2);
+  letter-spacing: 0.04em;
+}
+.badge span {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* MAIN LAYOUT */
+.main {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 0;
+  height: calc(100vh - 110px);
+}
+
+/* LEFT — ITINERARY */
+.itinerary-panel {
+  overflow-y: auto;
+  padding: 1.5rem 2rem;
+  border-right: 1px solid var(--border);
+}
+.itinerary-panel::-webkit-scrollbar { width: 4px; }
+.itinerary-panel::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+.panel-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 1.4rem;
+}
+
+/* FLIGHT CARDS */
+.flights-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 1.6rem;
+}
+.flight-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.flight-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+}
+.flight-card.return::before {
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+}
+.flight-route {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.flight-port {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+.flight-arrow {
+  color: var(--text3);
+  font-size: 0.9rem;
+  flex: 1;
+  text-align: center;
+}
+.flight-meta {
+  font-size: 0.72rem;
+  color: var(--text2);
+  line-height: 1.8;
+}
+.flight-meta strong { color: var(--accent); font-weight: 500; }
+.flight-card.return .flight-meta strong { color: var(--gold2); }
+.flight-tag {
+  position: absolute;
+  top: 10px; right: 12px;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+/* BUDGET BAR */
+.budget-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 1.6rem;
+}
+.budget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+.budget-title { font-size: 0.72rem; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; }
+.budget-total { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--accent); }
+.budget-items { display: flex; flex-direction: column; gap: 8px; }
+.budget-item { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 10px; }
+.budget-item-label { font-size: 0.74rem; color: var(--text2); }
+.budget-bar-wrap { background: rgba(255,255,255,0.05); border-radius: 3px; height: 4px; width: 100px; }
+.budget-bar-fill { height: 4px; border-radius: 3px; background: var(--accent2); }
+.budget-item-val { font-size: 0.74rem; color: var(--text); text-align: right; min-width: 50px; }
+
+/* DAYS */
+.days-grid { display: flex; flex-direction: column; gap: 10px; }
+.day-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.day-card:hover { border-color: var(--border2); background: var(--card2); }
+.day-card.active { border-color: rgba(78,202,127,0.4); background: var(--card2); }
+.day-header {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 14px;
+}
+.day-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.9rem;
+  font-weight: 300;
+  color: var(--text3);
+  line-height: 1;
+}
+.day-num span { display: block; font-size: 0.65rem; font-family: 'DM Sans', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); margin-top: 2px; }
+.day-info h3 { font-size: 0.95rem; font-weight: 500; color: var(--text); }
+.day-info p { font-size: 0.72rem; color: var(--text2); margin-top: 2px; }
+.day-icon { font-size: 1.4rem; }
+.day-body {
+  display: none;
+  padding: 0 16px 14px;
+  border-top: 1px solid var(--border);
+}
+.day-card.active .day-body { display: block; }
+.day-body ul { list-style: none; padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.day-body ul li {
+  font-size: 0.78rem;
+  color: var(--text2);
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+}
+.day-body ul li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+.day-body ul li strong { color: var(--accent3); font-weight: 500; }
+.day-body ul li .price { color: var(--gold2); margin-left: 4px; }
+
+.day-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+}
+.day-tag {
+  font-size: 0.64rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  letter-spacing: 0.04em;
+}
+.day-tag.ferry { border-color: rgba(91,163,217,0.3); color: var(--blue); }
+.day-tag.beach { border-color: rgba(78,202,127,0.3); color: var(--accent); }
+.day-tag.food { border-color: rgba(212,168,67,0.3); color: var(--gold2); }
+.day-tag.culture { border-color: rgba(168,230,194,0.2); color: var(--accent3); }
+
+/* RIGHT — AGENT */
+.agent-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg2);
+}
+.agent-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.agent-avatar {
+  width: 36px; height: 36px;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  position: relative;
+}
+.agent-avatar::after {
+  content: '';
+  position: absolute;
+  bottom: 1px; right: 1px;
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 1.5px solid var(--bg2);
+}
+.agent-name { font-size: 0.85rem; font-weight: 500; color: var(--text); }
+.agent-name span { display: block; font-size: 0.68rem; color: var(--text3); font-weight: 300; }
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.chat-messages::-webkit-scrollbar { width: 3px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.msg { display: flex; gap: 8px; align-items: flex-start; }
+.msg.user { flex-direction: row-reverse; }
+.msg-av {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+.msg-av.ai { background: var(--card); border: 1px solid var(--border); color: var(--accent); font-size: 0.9rem; }
+.msg-av.u { background: rgba(78,202,127,0.15); color: var(--accent); }
+.bubble {
+  max-width: 86%;
+  padding: 9px 13px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: var(--text);
+}
+.bubble.ai {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+.bubble.user-b {
+  background: var(--accent2);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.typing-dots { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); animation: pulse 1.2s infinite; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulse { 0%,80%,100%{opacity:0.3; transform:scale(1)} 40%{opacity:1; transform:scale(1.2)} }
+
+/* QUICK PROMPTS */
+.quick-section {
+  padding: 0.8rem 1.2rem 0;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.qp {
+  font-size: 0.68rem;
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.qp:hover { border-color: var(--border2); color: var(--accent); background: rgba(78,202,127,0.05); }
+
+/* INPUT */
+.input-area {
+  padding: 1rem 1.2rem;
+  border-top: 1px solid var(--border);
+}
+.input-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.input-row textarea {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 13px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  resize: none;
+  min-height: 38px;
+  max-height: 100px;
+  line-height: 1.5;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input-row textarea:focus { border-color: var(--border2); }
+.input-row textarea::placeholder { color: var(--text3); }
+.send-btn {
+  width: 38px; height: 38px;
+  background: var(--accent2);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+  flex-shrink: 0;
+  color: white;
+  font-size: 0.9rem;
+}
+.send-btn:hover { background: var(--accent); }
+.send-btn:disabled { background: var(--card); color: var(--text3); cursor: not-allowed; }
+
+/* FERRY TABLE */
+.ferry-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 1.6rem;
+  overflow: hidden;
+}
+.ferry-title {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.ferry-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 80px 80px;
+  padding: 9px 16px;
+  font-size: 0.74rem;
+  border-bottom: 1px solid rgba(78,202,127,0.06);
+  align-items: center;
+}
+.ferry-row:last-child { border-bottom: none; }
+.ferry-row.head { font-size: 0.65rem; color: var(--text3); letter-spacing: 0.06em; background: rgba(0,0,0,0.2); }
+.ferry-from { color: var(--text2); }
+.ferry-to { color: var(--text2); }
+.ferry-company { color: var(--blue); font-size: 0.68rem; }
+.ferry-price { color: var(--gold2); text-align: right; font-weight: 500; }
+
+/* LINKS */
+.links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.6rem; }
+.link-card {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 12px;
+  text-decoration: none; color: var(--text);
+  transition: border-color 0.2s, background 0.2s;
+}
+.link-card:hover { border-color: var(--border2); background: var(--card2); }
+.link-icon { font-size: 1.2rem; flex-shrink: 0; }
+.link-info { flex: 1; min-width: 0; }
+.link-name { font-size: 0.76rem; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.link-desc { font-size: 0.66rem; color: var(--text3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.link-arr { font-size: 0.8rem; color: var(--accent); flex-shrink: 0; }
+
+@media (max-width: 800px) {
+  .main { grid-template-columns: 1fr; height: auto; }
+  .agent-panel { height: 500px; }
+  .header { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .flights-row { grid-template-columns: 1fr; }
+}
+
+/* Animations */
+@keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+.day-card { animation: fadeIn 0.3s ease both; }
+.day-card:nth-child(1){animation-delay:0.05s}
+.day-card:nth-child(2){animation-delay:0.1s}
+.day-card:nth-child(3){animation-delay:0.15s}
+.day-card:nth-child(4){animation-delay:0.2s}
+.day-card:nth-child(5){animation-delay:0.25s}
+.day-card:nth-child(6){animation-delay:0.3s}
+.day-card:nth-child(7){animation-delay:0.35s}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>🇮🇹 <em>Italia</em> 2026</h1>
+    <p>Family Trip Dashboard · Salerno · 29.06 – 06.07</p>
+  </div>
+  <div class="header-badges">
+    <div class="badge">✈️ WizzAir <span>SKP→NAP</span></div>
+    <div class="badge">👨‍👩‍👧 <span>3</span> патници</div>
+    <div class="badge">🏨 Salerno <span>7 ноќи</span></div>
+    <div class="badge">💶 Буџет <span>€2,500</span></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- LEFT PANEL -->
+  <div class="itinerary-panel">
+    <div class="panel-title">Детален план</div>
+
+    <!-- FLIGHTS -->
+    <div class="flights-row">
+      <div class="flight-card">
+        <div class="flight-tag">Полетување</div>
+        <div class="flight-route">
+          <div class="flight-port">SKP</div>
+          <div class="flight-arrow">✈ ─────</div>
+          <div class="flight-port">NAP</div>
+        </div>
+        <div class="flight-meta">
+          <strong>29 јуни 2026</strong> · 16:30 → 18:10<br>
+          WizzAir · ~1ч 40мин<br>
+          Напол Каподикино
+        </div>
+      </div>
+      <div class="flight-card return">
+        <div class="flight-tag">Поврат</div>
+        <div class="flight-route">
+          <div class="flight-port">NAP</div>
+          <div class="flight-arrow">✈ ─────</div>
+          <div class="flight-port">SKP</div>
+        </div>
+        <div class="flight-meta">
+          <strong>6 јули 2026</strong> · 18:45<br>
+          WizzAir · Потребно на аер. до <strong>16:45</strong><br>
+          Воз Салерно → Напол: 15:30
+        </div>
+      </div>
+    </div>
+
+    <!-- BUDGET -->
+    <div class="budget-section">
+      <div class="budget-header">
+        <div class="budget-title">Буџет план (тројца)</div>
+        <div class="budget-total">€2,500</div>
+      </div>
+      <div class="budget-items">
+        <div class="budget-item">
+          <div class="budget-item-label">🏨 Сместување (резерв.)</div>
+          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:56%;background:#4eca7f"></div></div>
+          <div class="budget-item-val">~€550</div>
+        </div>
+        <div class="budget-item">
+          <div class="budget-item-label">🍝 Храна (€45/ден)</div>
+          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:32%;background:#2a9d5c"></div></div>
+          <div class="budget-item-val">~€315</div>
+        </div>
+        <div class="budget-item">
+          <div class="budget-item-label">⛴️ Фери (сите рути)</div>
+          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:28%;background:#5ba3d9"></div></div>
+          <div class="budget-item-val">~€275</div>
+        </div>
+        <div class="budget-item">
+          <div class="budget-item-label">🏛️ Влезници / Капри</div>
+          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:15%;background:#d4a843"></div></div>
+          <div class="budget-item-val">~€150</div>
+        </div>
+        <div class="budget-item">
+          <div class="budget-item-label">🛍️ Шопинг / резерва</div>
+          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:22%;background:#3a6e50"></div></div>
+          <div class="budget-item-val">~€210</div>
+        </div>
+        <div class="budget-item" style="border-top:1px solid rgba(78,202,127,0.12);padding-top:8px;margin-top:2px">
+          <div class="budget-item-label" style="color:#4eca7f;font-weight:500">✅ Вкупно проценето</div>
+          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:60%;background:#4eca7f"></div></div>
+          <div class="budget-item-val" style="color:#4eca7f;font-weight:500">~€1,500</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FERRY TABLE -->
+    <div class="ferry-section">
+      <div class="ferry-title">⛴️ Фери рути (Travelmar + Alicost)</div>
+      <div class="ferry-row head">
+        <div>Од</div><div>До</div><div>Превозник</div><div style="text-align:right">Цена/лице</div>
+      </div>
+      <div class="ferry-row">
+        <div class="ferry-from">Салерно</div>
+        <div class="ferry-to">Амалфи (~40мин)</div>
+        <div class="ferry-company">Travelmar</div>
+        <div class="ferry-price">€8–12</div>
+      </div>
+      <div class="ferry-row">
+        <div class="ferry-from">Амалфи</div>
+        <div class="ferry-to">Позитано (~25мин)</div>
+        <div class="ferry-company">Travelmar</div>
+        <div class="ferry-price">€8–10</div>
+      </div>
+      <div class="ferry-row">
+        <div class="ferry-from">Позитано</div>
+        <div class="ferry-to">Салерно (~1ч)</div>
+        <div class="ferry-company">Travelmar</div>
+        <div class="ferry-price">€10–12</div>
+      </div>
+      <div class="ferry-row">
+        <div class="ferry-from">Салерно</div>
+        <div class="ferry-to">Капри (~1ч30мин)</div>
+        <div class="ferry-company">Alicost</div>
+        <div class="ferry-price">€29.50</div>
+      </div>
+      <div class="ferry-row" style="font-size:0.68rem;color:#5d8a6e;padding-top:6px;padding-bottom:10px">
+        <div colspan="4">💡 Резервирај преку travelmar.it / alicost.it или ferryhopper.com · Рано зарани во јули!</div>
+      </div>
+    </div>
+
+    <!-- LINKS -->
+    <div class="panel-title">🔗 Корисни линкови</div>
+    <div class="links-grid">
+      <a class="link-card" href="https://www.travelmar.it" target="_blank">
+        <div class="link-icon">⛴️</div>
+        <div class="link-info"><div class="link-name">Travelmar</div><div class="link-desc">Фери Салерно↔Амалфи↔Позитано</div></div>
+        <div class="link-arr">↗</div>
+      </a>
+      <a class="link-card" href="https://www.alicost.it" target="_blank">
+        <div class="link-icon">🏝️</div>
+        <div class="link-info"><div class="link-name">Alicost</div><div class="link-desc">Фери Салерно↔Капри</div></div>
+        <div class="link-arr">↗</div>
+      </a>
+      <a class="link-card" href="https://www.ferryhopper.com/en/ferries/italy/salerno" target="_blank">
+        <div class="link-icon">🗺️</div>
+        <div class="link-info"><div class="link-name">Ferryhopper</div><div class="link-desc">Споредба и резервација фери</div></div>
+        <div class="link-arr">↗</div>
+      </a>
+      <a class="link-card" href="https://www.trenitalia.com" target="_blank">
+        <div class="link-icon">🚂</div>
+        <div class="link-info"><div class="link-name">Trenitalia</div><div class="link-desc">Возови Напол↔Салерно</div></div>
+        <div class="link-arr">↗</div>
+      </a>
+      <a class="link-card" href="https://www.capri.com/en/ferry-schedule" target="_blank">
+        <div class="link-icon">🔵</div>
+        <div class="link-info"><div class="link-name">Капри — фери + Blue Grotto</div><div class="link-desc">Распоред, цени, инфо</div></div>
+        <div class="link-arr">↗</div>
+      </a>
+      <a class="link-card" href="https://www.positano.com/en/ferry-schedule" target="_blank">
+        <div class="link-icon">🌈</div>
+        <div class="link-info"><div class="link-name">Позитано фери</div><div class="link-desc">Распоред и цени 2026</div></div>
+        <div class="link-arr">↗</div>
+      </a>
+      <a class="link-card" href="https://www.airnaples.it/en/transport/alibus" target="_blank">
+        <div class="link-icon">🚌</div>
+        <div class="link-info"><div class="link-name">Alibus Напол</div><div class="link-desc">Аеродром → Централа, €5/лице</div></div>
+        <div class="link-arr">↗</div>
+      </a>
+      <a class="link-card" href="https://paestum.beniculturali.it" target="_blank">
+        <div class="link-icon">🏛️</div>
+        <div class="link-info"><div class="link-name">Пестум — официјален сајт</div><div class="link-desc">Грчки храмови, влезници €13</div></div>
+        <div class="link-arr">↗</div>
+      </a>
+      <a class="link-card" href="https://www.google.com/maps/search/restaurants+salerno+italy" target="_blank">
+        <div class="link-icon">🍝</div>
+        <div class="link-info"><div class="link-name">Ресторани Салерно</div><div class="link-desc">Google Maps — локации и рецензии</div></div>
+        <div class="link-arr">↗</div>
+      </a>
+      <a class="link-card" href="https://www.wizzair.com" target="_blank">
+        <div class="link-icon">✈️</div>
+        <div class="link-info"><div class="link-name">WizzAir</div><div class="link-desc">Check-in онлајн за летот</div></div>
+        <div class="link-arr">↗</div>
+      </a>
+    </div>
+
+    <!-- DAYS -->
+    <div class="panel-title" style="margin-top:1.6rem">Итинерар ден по ден</div>
+    <div class="days-grid" id="daysGrid"></div>
+  </div>
+
+  <!-- RIGHT — AGENT -->
+  <div class="agent-panel">
+    <div class="agent-header">
+      <div class="agent-avatar">🇮🇹</div>
+      <div class="agent-name">
+        Italy Travel Agent
+        <span>Персонализиран за твоето патување</span>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg">
+        <div class="msg-av ai">🇮🇹</div>
+        <div class="bubble ai">
+          Ciao! Го имаш целосниот план пред тебе 🗺️<br><br>
+          Прашај ме за кој било ден, ресторан, плажа, Капри, буџет — сè! Кликни на ден во итинерарот или напиши директно.
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-section">
+      <button class="qp" onclick="quickAsk('Дај ми совети за Blue Grotto на Капри')">🔵 Blue Grotto</button>
+      <button class="qp" onclick="quickAsk('Кои ресторани во Амалфи се добри и со разумни цени?')">🍝 Ресторани</button>
+      <button class="qp" onclick="quickAsk('Кога точно треба да тргнеме на 6 јули за летот?')">✈️ Замина</button>
+      <button class="qp" onclick="quickAsk('Дај ми совети за плажите во Позитано')">🏖️ Плажи</button>
+      <button class="qp" onclick="quickAsk('Колку чини влез за Blue Grotto и вреди ли?')">💶 Цени</button>
+    </div>
+
+    <div class="input-area">
+      <div class="input-row">
+        <textarea id="chatInput" placeholder="Прашај ме нешто..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMsg()">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ITINERARY DATA
+const days = [
+  {
+    num: "29", month: "ЈУН", day: "Недела",
+    title: "Пристигнување во Салерно",
+    sub: "Напол → Алибус → Воз → Салерно",
+    icon: "✈️",
+    tags: ["transport"],
+    items: [
+      "<strong>18:10</strong> — Слетување Напол Каподикино",
+      "<strong>Alibus</strong> до Напол Централе (~20 мин)<span class='price'>€5/лице</span>",
+      "<strong>Voз</strong> Напол→Салерно (~45 мин)<span class='price'>~€6/лице</span>",
+      "Пристигнување во Салерно ~<strong>20:15</strong>",
+      "Check-in хотел, вечера на <strong>Lungomare Trieste</strong>",
+      "💡 Купи биле за воз во Напол Централе на автомат"
+    ]
+  },
+  {
+    num: "30", month: "ЈУН", day: "Понеделник",
+    title: "Салерно + Виетри сул Маре",
+    sub: "Ориентација, стар град, локална плажа",
+    icon: "🏛️",
+    tags: ["culture", "beach"],
+    items: [
+      "Утро: <strong>Дуомо ди Салерно</strong> (безбесплатно, прекрасен)",
+      "<strong>Via Mercanti</strong> — стариот пешачки центар",
+      "Воз до <strong>Vietri sul Mare</strong> (~5 мин)<span class='price'>€2</span>",
+      "Керамички продавници, <strong>плажа</strong> во Виетри",
+      "Вечера: <strong>Lungomare Trieste</strong> — пица или паста",
+      "💡 Вечерната прошетка по Лунгомаре е бесплатна и прекрасна!"
+    ]
+  },
+  {
+    num: "1", month: "ЈУЛ", day: "Вторник",
+    title: "Амалфи",
+    sub: "Feri Travelmar · ~40 мин · €8–12/лице",
+    icon: "⛵",
+    tags: ["ferry", "culture", "beach", "food"],
+    items: [
+      "<strong>Feri Travelmar</strong> Салерно→Амалфи<span class='price'>€8–12/лице</span>",
+      "<strong>Дуомо ди Амалфи</strong> — задолжително (бесплатно однадвор)",
+      "Крипта Св. Андреа<span class='price'>€3/лице</span>",
+      "Бродска обиколка около карпите — <strong>опционо</strong>",
+      "Ручек: <strong>Da Gemma</strong> или <strong>Le Arcate</strong> (поевтино)",
+      "Плажа: <strong>Spiaggia di Amalfi</strong> (чакали)",
+      "Feri назад навечер<span class='price'>~€10</span>"
+    ]
+  },
+  {
+    num: "2", month: "ЈУЛ", day: "Среда",
+    title: "Позитано",
+    sub: "Feri Travelmar · Директно или преку Амалфи",
+    icon: "🌈",
+    tags: ["ferry", "beach", "food"],
+    items: [
+      "<strong>Feri Travelmar</strong> Салерно→Позитано<span class='price'>~€10–14/лице</span>",
+      "<strong>Spiaggia Grande</strong> — плажа (сончобран ~€15/ден за двајца)",
+      "Шетање низ колоритните улички нагоре",
+      "Поглед кон морето од <strong>Chiesa di Santa Maria Assunta</strong>",
+      "Ручек/вечера: <strong>Lo Guarracino</strong> — разумни цени + поглед",
+      "💡 Позитано е поскапо — земи сендвич за плажа!",
+      "Feri назад<span class='price'>~€10–12</span>"
+    ]
+  },
+  {
+    num: "3", month: "ЈУЛ", day: "Четврток",
+    title: "Капри ⭐",
+    sub: "Alicost · Директно од Салерно · ~1ч 30мин",
+    icon: "🏝️",
+    tags: ["ferry", "beach", "culture"],
+    items: [
+      "<strong>Alicost fери</strong> Салерно→Капри<span class='price'>€29.50/лице</span>",
+      "💡 Тргни рано — <strong>Blue Grotto</strong> е затворен попладне!",
+      "<strong>Blue Grotto</strong><span class='price'>€14 влез + €18 чамец/лице</span>",
+      "Фуникулар до <strong>Капри Таун</strong><span class='price'>€2.20</span>",
+      "<strong>Gardens of Augustus</strong> — поглед кон Фараглиони<span class='price'>€1</span>",
+      "Ручек — јади ПРЕД Капри — многу скапо на островот!",
+      "Fери назад навечер<span class='price'>€29.50</span>"
+    ]
+  },
+  {
+    num: "4", month: "ЈУЛ", day: "Петок",
+    title: "Слободен ден / Пестум",
+    sub: "Плажа или грчки храмови — твој избор",
+    icon: "🏖️",
+    tags: ["beach", "culture"],
+    items: [
+      "Опција А: <strong>Плажи на Салерно</strong> — Lido Azzurro (бесплатно/евтино)",
+      "Опција Б: <strong>Castello Arechi</strong> над Салерно — бесплатно, одличен поглед",
+      "Опција В: Воз до <strong>Пестум</strong> (~30 мин)<span class='price'>€4/лице</span>",
+      "→ Пестум: <strong>грчки храмови</strong> постари од Рим<span class='price'>€13 влез</span>",
+      "→ <strong>Плажи на Пестум</strong> — широки, ПЕСОЧНИ, помалку туристи!",
+      "💡 Препорака: Пестум е скриен бисер кој многу луѓе го пропуштаат"
+    ]
+  },
+  {
+    num: "5", month: "ЈУЛ", day: "Сабота",
+    title: "Последна вечера во Салерно",
+    sub: "Одмор, шопинг, прощална вечера",
+    icon: "🌙",
+    tags: ["food"],
+    items: [
+      "Утро: <strong>пазар</strong> во Салерно — локална храна, сувенири",
+      "Оддолни купувања во Via Roma",
+      "Попладне: одмор, спремање куфери",
+      "Вечера: <strong>прощална вечера</strong> во Салерно — без журба",
+      "Препорака: Ristorante Il Brigante или <strong>Vicolo della Neve</strong>",
+      "💡 Последна прошетка по Lungomare навечер"
+    ]
+  },
+  {
+    num: "6", month: "ЈУЛ", day: "Недела",
+    title: "Замина — Напол Аеродром",
+    sub: "Checkout · Воз 15:30 · Лет 18:45",
+    icon: "✈️",
+    tags: ["transport"],
+    items: [
+      "Утро: <strong>checkout</strong> — остави багаж на рецепција",
+      "Последно кафе на Lungomare",
+      "<strong>⚠️ Воз Салерно→Напол Централе</strong> најдоцна <strong>15:30</strong>",
+      "Алибус или метро до аеродром (пристигни до <strong>16:45</strong>!)",
+      "Лет NAP→SKP: <strong>18:45</strong>",
+      "Arrivederci Italia! 🇮🇹❤️"
+    ]
+  }
+];
+
+function renderDays() {
+  const grid = document.getElementById('daysGrid');
+  days.forEach((d, i) => {
+    const tagHtml = (d.tags||[]).map(t => `<span class="day-tag ${t}">${
+      t==='ferry'?'⛴️ Фери':t==='beach'?'🏖️ Плажа':t==='food'?'🍝 Храна':'🏛️ Култура'
+    }</span>`).join('');
+    const itemsHtml = d.items.map(it => `<li>${it}</li>`).join('');
+    const card = document.createElement('div');
+    card.className = 'day-card';
+    card.innerHTML = `
+      <div class="day-header" onclick="toggleDay(this.parentElement)">
+        <div class="day-num">${d.num}<span>${d.month}</span></div>
+        <div class="day-info"><h3>${d.title}</h3><p>${d.day} · ${d.sub}</p></div>
+        <div class="day-icon">${d.icon}</div>
+      </div>
+      <div class="day-body">
+        <div class="day-tags">${tagHtml}</div>
+        <ul>${itemsHtml}</ul>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function toggleDay(card) {
+  card.classList.toggle('active');
+}
+
+renderDays();
+
+// AGENT
+const SYSTEM = `Ti si Italy Travel Agent 2026 - ekspert za patuvanja. Komuniciraj NA MAKEDONSKI JAZIK.
+
+PODATOCI ZA OVA PATUVANJE:
+- 3 luge: soprug, soprugata, kjerka 17 god
+- Budzet: €2,500 vkupno
+- Let: WizzAir SKP→NAP 29.06.2026 16:30, sletuvanje 18:10
+- Povrat: NAP→SKP 06.07.2026 vo 18:45 (na aerodrom do 16:45, voz od Salerno 15:30)
+- Smestuvanje: Salerno blizu zeleznicka, REZERVIRANO, 7 nokjevanja
+- Feri prevoz: Travelmar za Amalfi/Positano, Alicost za Capri
+- Feri ceni: Salerno→Amalfi €8-12/lice (Travelmar), Salerno→Positano €10-14/lice, Salerno→Capri €29.50/lice (Alicost)
+- Plazi: Vietri, Spiaggia Amalfi, Spiaggia Grande Positano (plakjanje), Pestum (pesok!), Lido Azzurro Salerno
+- Blue Grotto Capri: €14 vleznica + €18 camec/lice, odi RANO NAUTRO
+- Restorani Salerno: Vicolo della Neve, Il Brigante, Lungomare za vecer
+- Restorani Amalfi: Da Gemma, Le Arcate (poevtino)
+- Positano: Lo Guarracino (pogled + razumni ceni)
+- Capri: SKUPO - jadi pred da otides
+- Pestum: 30 min voz od Salerno, €4/lice, hramovi + pesocni plazi - SKRIEN BISER
+- Alibus Napoli aerodr→Napoli Centrale: €5/lice, 20 min
+- Voz Napoli→Salerno: ~45 min, €6/lice
+
+Odgovaraj kratko i konkretno. Zemaj go predvid budzhetot. Bidi prijatelski.`;
+
+let history = [];
+let busy = false;
+
+async function sendMsg() {
+  const inp = document.getElementById('chatInput');
+  const text = inp.value.trim();
+  if (!text || busy) return;
+  busy = true;
+  document.getElementById('sendBtn').disabled = true;
+  inp.value = ''; inp.style.height = 'auto';
+
+  addBubble('user', text);
+  history.push({role:'user', content: text});
+  showTyping();
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5',
+        max_tokens: 1000,
+        system: SYSTEM,
+        messages: history
+      })
+    });
+    const data = await res.json();
+    removeTyping();
+    const reply = data.content?.map(b=>b.text||'').join('') || 'Грешка. Обиди се.';
+    addBubble('ai', reply);
+    history.push({role:'assistant', content: reply});
+  } catch(e) {
+    removeTyping();
+    addBubble('ai', 'Грешка со поврзување. Обиди се повторно.');
+  }
+  busy = false;
+  document.getElementById('sendBtn').disabled = false;
+}
+
+function quickAsk(q) {
+  document.getElementById('chatInput').value = q;
+  sendMsg();
+}
+
+function addBubble(role, text) {
+  const chat = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg' + (role==='user'?' user':'');
+  const av = document.createElement('div');
+  av.className = 'msg-av ' + (role==='user'?'u':'ai');
+  av.textContent = role==='user'?'Ти':'🇮🇹';
+  const b = document.createElement('div');
+  b.className = 'bubble ' + (role==='user'?'user-b':'ai');
+  b.innerHTML = text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  div.appendChild(av); div.appendChild(b);
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function showTyping() {
+  const chat = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg'; div.id = 'typing';
+  div.innerHTML = '<div class="msg-av ai">🇮🇹</div><div class="bubble ai"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "italia-2026-dashboard",
+  "version": "1.0.0",
+  "description": "Italia 2026 Family Trip Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

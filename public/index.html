@@ -677,6 +677,7 @@ body {
         Italy Travel Agent
         <span>Персонализиран за твоето патување</span>
       </div>
+      <button onclick="clearSession()" title="Нова сесија" style="margin-left:auto;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text3);font-size:0.7rem;padding:4px 8px;cursor:pointer;white-space:nowrap">🗑 Нова</button>
     </div>
 
     <div class="chat-messages" id="chatMessages">
@@ -893,6 +894,66 @@ VAZNO - LINKOVI: Koga spomenuvas lokacija, restoran, plaza ili atrakcija, SEKOGA
 let history = [];
 let busy = false;
 
+// ── Session persistence ──────────────────────────────────────────────
+function saveSession() {
+  localStorage.setItem('it26_history', JSON.stringify(history));
+  const msgs = [];
+  document.querySelectorAll('#chatMessages .msg').forEach(m => {
+    const isUser = m.classList.contains('user');
+    const bubble = m.querySelector('.bubble');
+    if (bubble) msgs.push({role: isUser ? 'user' : 'ai', html: bubble.innerHTML});
+  });
+  localStorage.setItem('it26_display', JSON.stringify(msgs));
+}
+
+function clearSession() {
+  localStorage.removeItem('it26_history');
+  localStorage.removeItem('it26_display');
+  history = [];
+  const chat = document.getElementById('chatMessages');
+  chat.innerHTML = '<div class="msg"><div class="msg-av ai">🇮🇹</div><div class="bubble ai">Нова сесија почнала. Прашај ме нешто 🇮🇹</div></div>';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedHistory = localStorage.getItem('it26_history');
+  const savedDisplay = localStorage.getItem('it26_display');
+  if (savedHistory && savedDisplay) {
+    try {
+      history = JSON.parse(savedHistory);
+      const msgs = JSON.parse(savedDisplay);
+      if (msgs.length > 0) {
+        const chat = document.getElementById('chatMessages');
+        chat.innerHTML = '';
+        msgs.forEach(m => {
+          const div = document.createElement('div');
+          div.className = 'msg' + (m.role === 'user' ? ' user' : '');
+          const av = document.createElement('div');
+          av.className = 'msg-av ' + (m.role === 'user' ? 'u' : 'ai');
+          av.textContent = m.role === 'user' ? 'Ти' : '🇮🇹';
+          const b = document.createElement('div');
+          b.className = 'bubble ' + (m.role === 'user' ? 'user-b' : 'ai');
+          b.innerHTML = m.html;
+          div.appendChild(av); div.appendChild(b);
+          chat.appendChild(div);
+        });
+        chat.scrollTop = chat.scrollHeight;
+      }
+    } catch(e) { localStorage.removeItem('it26_history'); localStorage.removeItem('it26_display'); }
+  }
+});
+
+// ── Render text with links ───────────────────────────────────────────
+function renderText(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;word-break:break-all">$1</a>')
+    .replace(/(?<![">])(https?:\/\/[^\s<")\]]+)/g,
+      '<a href="$1" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;word-break:break-all">$1</a>')
+    .replace(/\n/g, '<br>');
+}
+
+// ── Chat ─────────────────────────────────────────────────────────────
 async function sendMsg() {
   const inp = document.getElementById('chatInput');
   const text = inp.value.trim();
@@ -908,9 +969,7 @@ async function sendMsg() {
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
         max_tokens: 1000,
@@ -923,6 +982,7 @@ async function sendMsg() {
     const reply = data.content?.map(b=>b.text||'').join('') || 'Грешка. Обиди се.';
     addBubble('ai', reply);
     history.push({role:'assistant', content: reply});
+    saveSession();
   } catch(e) {
     removeTyping();
     addBubble('ai', 'Грешка со поврзување. Обиди се повторно.');
@@ -945,10 +1005,7 @@ function addBubble(role, text) {
   av.textContent = role==='user'?'Ти':'🇮🇹';
   const b = document.createElement('div');
   b.className = 'bubble ' + (role==='user'?'user-b':'ai');
-  b.innerHTML = text
-    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;word-break:break-all">$1</a>')
-    .replace(/\n/g,'<br>');
+  b.innerHTML = renderText(text);
   div.appendChild(av); div.appendChild(b);
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;

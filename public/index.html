@@ -266,6 +266,7 @@ body {
 .day-tag.beach { border-color: rgba(78,202,127,0.3); color: var(--accent); }
 .day-tag.food { border-color: rgba(212,168,67,0.3); color: var(--gold2); }
 .day-tag.culture { border-color: rgba(168,230,194,0.2); color: var(--accent3); }
+.pl { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
 
 /* RIGHT — AGENT */
 .agent-panel {
@@ -489,7 +490,7 @@ body {
     <div class="badge">✈️ WizzAir <span>SKP→NAP</span></div>
     <div class="badge">👨‍👩‍👧 <span>3</span> патници</div>
     <div class="badge">🏨 Salerno <span>7 ноќи</span></div>
-    <div class="badge">💶 Буџет <span>€2,500</span></div>
+    <div class="badge">💶 Буџет <span>€1,800</span></div>
   </div>
 </div>
 
@@ -533,14 +534,9 @@ body {
     <div class="budget-section">
       <div class="budget-header">
         <div class="budget-title">Буџет план (тројца)</div>
-        <div class="budget-total">€2,500</div>
+        <div class="budget-total">€1,800</div>
       </div>
       <div class="budget-items">
-        <div class="budget-item">
-          <div class="budget-item-label">🏨 Сместување (резерв.)</div>
-          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:80%;background:#4eca7f"></div></div>
-          <div class="budget-item-val">€800</div>
-        </div>
         <div class="budget-item">
           <div class="budget-item-label">🍝 Храна (7 дена)</div>
           <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:70%;background:#2a9d5c"></div></div>
@@ -569,7 +565,7 @@ body {
         <div class="budget-item" style="border-top:1px solid rgba(78,202,127,0.12);padding-top:8px;margin-top:2px">
           <div class="budget-item-label" style="color:#4eca7f;font-weight:500">✅ Вкупно проценето</div>
           <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:86%;background:#4eca7f"></div></div>
-          <div class="budget-item-val" style="color:#4eca7f;font-weight:500">~€2,011</div>
+          <div class="budget-item-val" style="color:#4eca7f;font-weight:500">~€1,211</div>
         </div>
       </div>
     </div>
@@ -638,9 +634,9 @@ body {
         <div class="link-info"><div class="link-name">Alibus Напол</div><div class="link-desc">Аеродром → Централа, €5/лице</div></div>
         <div class="link-arr">↗</div>
       </a>
-      <a class="link-card" href="https://paestum.beniculturali.it" target="_blank">
-        <div class="link-icon">🏛️</div>
-        <div class="link-info"><div class="link-name">Пестум — официјален сајт</div><div class="link-desc">Грчки храмови, влезници €13</div></div>
+      <a class="link-card" href="https://www.grasi.it" target="_blank">
+        <div class="link-icon">⛴️</div>
+        <div class="link-info"><div class="link-name">Grasi Junior Ferries</div><div class="link-desc">Фери Салерно↔Амалфи↔Позитано↔Капри</div></div>
         <div class="link-arr">↗</div>
       </a>
       <a class="link-card" href="https://www.google.com/maps/search/restaurants+salerno+italy" target="_blank">
@@ -716,124 +712,131 @@ body {
 // ITINERARY DATA
 const days = [
   {
-    num: "29", month: "ЈУН", day: "Недела",
+    num: "29", month: "ЈУН", day: "Понеделник",
     title: "Пристигнување во Салерно",
     sub: "Напол → Алибус → Воз → Салерно",
     icon: "✈️",
     tags: ["transport"],
     items: [
-      "<strong>18:10</strong> — Слетување Напол Каподикино",
-      "<strong>Alibus</strong> до Напол Централе (~20 мин)<span class='price'>€5/лице</span>",
-      "<strong>Voз</strong> Напол→Салерно (~45 мин)<span class='price'>~€6/лице</span>",
+      "<strong>18:10</strong> — Слетување <a href='https://maps.google.com/?q=Naples+Capodichino+Airport+Italy' target='_blank' class='pl'>Напол Каподикино</a>",
+      "<strong>Alibus</strong> до <a href='https://maps.google.com/?q=Napoli+Centrale+Station+Italy' target='_blank' class='pl'>Напол Централе</a> (~20 мин)<span class='price'>€5/лице</span>",
+      "<strong>Воз</strong> Напол→Салерно (~45 мин)<span class='price'>~€6/лице</span>",
       "Пристигнување во Салерно ~<strong>20:15</strong>",
-      "Check-in хотел, вечера на <strong>Lungomare Trieste</strong>",
+      "Check-in хотел, вечера на <strong><a href='https://maps.google.com/?q=Lungomare+Trieste+Salerno+Italy' target='_blank' class='pl'>Lungomare Trieste</a></strong>",
       "💡 Купи биле за воз во Напол Централе на автомат"
     ]
   },
   {
-    num: "30", month: "ЈУН", day: "Понеделник",
+    num: "30", month: "ЈУН", day: "Вторник",
     title: "Салерно + Виетри сул Маре",
     sub: "Ориентација, стар град, локална плажа",
     icon: "🏛️",
     tags: ["culture", "beach"],
     items: [
-      "Утро: <strong>Дуомо ди Салерно</strong> (безбесплатно, прекрасен)",
-      "<strong>Via Mercanti</strong> — стариот пешачки центар",
-      "Воз до <strong>Vietri sul Mare</strong> (~5 мин)<span class='price'>€2</span>",
+      "Утро: <strong><a href='https://maps.google.com/?q=Duomo+di+Salerno+Italy' target='_blank' class='pl'>Дуомо ди Салерно</a></strong> (бесплатно, прекрасен)",
+      "<strong><a href='https://maps.google.com/?q=Via+Mercanti+Salerno+Italy' target='_blank' class='pl'>Via Mercanti</a></strong> — стариот пешачки центар",
+      "Воз до <strong><a href='https://maps.google.com/?q=Vietri+sul+Mare+Italy' target='_blank' class='pl'>Vietri sul Mare</a></strong> (~5 мин)<span class='price'>€2</span>",
       "Керамички продавници, <strong>плажа</strong> во Виетри",
-      "Вечера: <strong>Lungomare Trieste</strong> — пица или паста",
+      "Вечера: <strong><a href='https://maps.google.com/?q=Lungomare+Trieste+Salerno+Italy' target='_blank' class='pl'>Lungomare Trieste</a></strong> — пица или паста",
       "💡 Вечерната прошетка по Лунгомаре е бесплатна и прекрасна!"
     ]
   },
   {
-    num: "1", month: "ЈУЛ", day: "Вторник",
+    num: "1", month: "ЈУЛ", day: "Среда",
     title: "Амалфи",
-    sub: "Feri Travelmar · ~40 мин · €8–12/лице",
+    sub: "Fери Grasi Junior · Салерно↔Амалфи А/Р",
     icon: "⛵",
     tags: ["ferry", "culture", "beach", "food"],
     items: [
-      "<strong>Feri Travelmar</strong> Салерно→Амалфи<span class='price'>€8–12/лице</span>",
-      "<strong>Дуомо ди Амалфи</strong> — задолжително (бесплатно однадвор)",
-      "Крипта Св. Андреа<span class='price'>€3/лице</span>",
-      "Бродска обиколка около карпите — <strong>опционо</strong>",
-      "Ручек: <strong>Da Gemma</strong> или <strong>Le Arcate</strong> (поевтино)",
-      "Плажа: <strong>Spiaggia di Amalfi</strong> (чакали)",
-      "Feri назад навечер<span class='price'>~€10</span>"
+      "⛴️ <strong>Fери Grasi Junior</strong> Салерно→Амалфи (наутро)<span class='price'>вкл. во пакет €70</span>",
+      "🕌 <strong><a href='https://maps.google.com/?q=Duomo+di+Amalfi+Italy' target='_blank' class='pl'>Дуомо ди Амалфи</a></strong> — задолжително, влез во крипта<span class='price'>€3/лице</span>",
+      "🏛️ <strong><a href='https://maps.google.com/?q=Museo+della+Carta+Amalfi+Italy' target='_blank' class='pl'>Museo della Carta</a></strong> — музеј на хартија, уникатно<span class='price'>€4/лице</span>",
+      "🚶 <strong><a href='https://maps.google.com/?q=Valle+delle+Ferriere+Amalfi+Italy' target='_blank' class='pl'>Valle delle Ferriere</a></strong> — лесна шетница низ клисура (2ч, бесплатно)",
+      "🍋 <strong>Limoncello дегустација</strong> — купи директно кај производителите на Via Lorenzo d'Amalfi",
+      "🍝 Ручек: <strong><a href='https://maps.google.com/?q=Le+Arcate+Amalfi+Italy' target='_blank' class='pl'>Le Arcate</a></strong> (поевтино, добро) или <strong><a href='https://maps.google.com/?q=Trattoria+Il+Mulino+Amalfi+Italy' target='_blank' class='pl'>Il Mulino</a></strong>",
+      "🏖️ Плажа: <strong><a href='https://maps.google.com/?q=Spiaggia+di+Amalfi+Italy' target='_blank' class='pl'>Spiaggia di Amalfi</a></strong> или <strong><a href='https://maps.google.com/?q=Spiaggia+Santa+Croce+Amalfi+Italy' target='_blank' class='pl'>Santa Croce</a></strong> (потивко, 20 мин пешки)",
+      "💡 Избегни пезари и ресторани директно на пристаништето — скапо!",
+      "⛴️ Fери назад кон Салерно навечер"
     ]
   },
   {
-    num: "2", month: "ЈУЛ", day: "Среда",
+    num: "2", month: "ЈУЛ", day: "Четврток",
     title: "Позитано",
-    sub: "Feri Travelmar · Директно или преку Амалфи",
+    sub: "Fери Grasi Junior · Салерно→Позитано→Капри",
     icon: "🌈",
     tags: ["ferry", "beach", "food"],
     items: [
-      "<strong>Feri Travelmar</strong> Салерно→Позитано<span class='price'>~€10–14/лице</span>",
-      "<strong>Spiaggia Grande</strong> — плажа (сончобран ~€15/ден за двајца)",
-      "Шетање низ колоритните улички нагоре",
-      "Поглед кон морето од <strong>Chiesa di Santa Maria Assunta</strong>",
-      "Ручек/вечера: <strong>Lo Guarracino</strong> — разумни цени + поглед",
-      "💡 Позитано е поскапо — земи сендвич за плажа!",
-      "Feri назад<span class='price'>~€10–12</span>"
+      "⛴️ <strong>Fери Grasi Junior</strong> Салерно→Позитано (наутро)<span class='price'>вкл. во пакет €180</span>",
+      "🏖️ <strong><a href='https://maps.google.com/?q=Spiaggia+Grande+Positano+Italy' target='_blank' class='pl'>Spiaggia Grande</a></strong> — главна плажа, чакал (сончобран ~€15 за двајца)",
+      "🏖️ <strong><a href='https://maps.google.com/?q=Spiaggia+Fornillo+Positano+Italy' target='_blank' class='pl'>Spiaggia Fornillo</a></strong> — потивка, 10 мин пешки западно (поевтина!)",
+      "⛪ <strong><a href='https://maps.google.com/?q=Chiesa+Santa+Maria+Assunta+Positano+Italy' target='_blank' class='pl'>Chiesa di Santa Maria Assunta</a></strong> — купола со мајолика плочки, бесплатно",
+      "🚶 Пешачи по <strong><a href='https://maps.google.com/?q=Via+Positanesi+d+America+Positano+Italy' target='_blank' class='pl'>Via Positanesi d'America</a></strong> — живописен пат над морето",
+      "👗 Шопинг: познатите <strong>Positano сандали</strong> (hand-made, ~€30-60) — Via dei Mulini",
+      "🍝 Ручек: <strong><a href='https://maps.google.com/?q=Lo+Guarracino+Positano+Italy' target='_blank' class='pl'>Lo Guarracino</a></strong> (поглед + разумно) или купи сендвич/пица за плажа",
+      "💡 Позитано е СКАПО — плати само за она што е навистина вредно!",
+      "⛴️ Попладне: фери кон Капри (ноќевање или пренос)"
     ]
   },
   {
-    num: "3", month: "ЈУЛ", day: "Четврток",
+    num: "3", month: "ЈУЛ", day: "Петок",
     title: "Капри ⭐",
-    sub: "Alicost · Директно од Салерно · ~1ч 30мин",
+    sub: "Grasi Junior · Позитано→Капри→Салерно",
     icon: "🏝️",
     tags: ["ferry", "beach", "culture"],
     items: [
-      "<strong>Alicost fери</strong> Салерно→Капри<span class='price'>€29.50/лице</span>",
-      "💡 Тргни рано — <strong>Blue Grotto</strong> е затворен попладне!",
-      "<strong>Blue Grotto</strong><span class='price'>€14 влез + €18 чамец/лице</span>",
-      "Фуникулар до <strong>Капри Таун</strong><span class='price'>€2.20</span>",
-      "<strong>Gardens of Augustus</strong> — поглед кон Фараглиони<span class='price'>€1</span>",
-      "Ручек — јади ПРЕД Капри — многу скапо на островот!",
-      "Fери назад навечер<span class='price'>€29.50</span>"
+      "⚠️ Тргни <strong>рано наутро</strong> — Blue Grotto се затвора при голем бран!",
+      "🔵 <strong><a href='https://maps.google.com/?q=Blue+Grotto+Capri+Italy' target='_blank' class='pl'>Blue Grotto (Grotta Azzurra)</a></strong> — сина пештера, задолжително<span class='price'>€14 влез + €18 чамец/лице</span>",
+      "🚠 <strong>Фуникулар</strong> до <strong><a href='https://maps.google.com/?q=Capri+Town+Italy' target='_blank' class='pl'>Капри Таун</a></strong> — Piazzetta е срце на островот<span class='price'>€2.20</span>",
+      "🌿 <strong><a href='https://maps.google.com/?q=Gardens+of+Augustus+Capri+Italy' target='_blank' class='pl'>Gardens of Augustus</a></strong> — поглед кон Фараглиони (иконски!)<span class='price'>€1</span>",
+      "🚌 Опционо: Автобус до <strong><a href='https://maps.google.com/?q=Anacapri+Italy' target='_blank' class='pl'>Anacapри</a></strong> (потивко, поевтино)<span class='price'>€2</span> + Вила Сан Микеле<span class='price'>€8</span>",
+      "🪨 <strong><a href='https://maps.google.com/?q=Arco+Naturale+Capri+Italy' target='_blank' class='pl'>Arco Naturale</a></strong> — природен камен лак, бесплатно, 30 мин пешки",
+      "🍋 Купи <strong>лимончело и локален сапун</strong> во Anacapri — двојно поевтино од Капри Таун",
+      "💡 Јади ПРЕД Капри (во Позитано) — цените на островот се двојно повисоки!",
+      "⛴️ Попладне/навечер: фери назад кон Салерно"
     ]
   },
   {
-    num: "4", month: "ЈУЛ", day: "Петок",
-    title: "Слободен ден / Пестум",
-    sub: "Плажа или грчки храмови — твој избор",
+    num: "4", month: "ЈУЛ", day: "Сабота",
+    title: "Слободен ден — Салерно",
+    sub: "Одмор, плажа, истражување на градот",
     icon: "🏖️",
     tags: ["beach", "culture"],
     items: [
-      "Опција А: <strong>Плажи на Салерно</strong> — Lido Azzurro (бесплатно/евтино)",
-      "Опција Б: <strong>Castello Arechi</strong> над Салерно — бесплатно, одличен поглед",
-      "Опција В: Воз до <strong>Пестум</strong> (~30 мин)<span class='price'>€4/лице</span>",
-      "→ Пестум: <strong>грчки храмови</strong> постари од Рим<span class='price'>€13 влез</span>",
-      "→ <strong>Плажи на Пестум</strong> — широки, ПЕСОЧНИ, помалку туристи!",
-      "💡 Препорака: Пестум е скриен бисер кој многу луѓе го пропуштаат"
+      "🏖️ Опција А: <strong>Плажи во Салерно</strong> — <a href='https://maps.google.com/?q=Lido+Azzurro+Salerno+Italy' target='_blank' class='pl'>Lido Azzurro</a> (бесплатно) или <a href='https://maps.google.com/?q=Spiaggia+Torrione+Salerno+Italy' target='_blank' class='pl'>Spiaggia Torrione</a>",
+      "🏰 Опција Б: <strong><a href='https://maps.google.com/?q=Castello+Arechi+Salerno+Italy' target='_blank' class='pl'>Castello Arechi</a></strong> — тврдина над Салерно, бесплатно, панорамски поглед",
+      "🐟 Опција В: Воз до <strong><a href='https://maps.google.com/?q=Cetara+Italy' target='_blank' class='pl'>Четара (Cetara)</a></strong> — мало рибарско село, 15 мин<span class='price'>€3/лице</span>",
+      "→ Четара: познати по тоном риба и тиквица, пробај <strong>colatura di alici</strong> (ансоти сос)",
+      "→ Плажата во Четара е помала но потивка и автентична",
+      "🌿 Попладне: прошетка по <strong><a href='https://maps.google.com/?q=Lungomare+Trieste+Salerno+Italy' target='_blank' class='pl'>Lungomare</a></strong> — ривиерата на Салерно",
+      "💡 Ова е ден за одмор — Капри бил интензивен!"
     ]
   },
   {
-    num: "5", month: "ЈУЛ", day: "Сабота",
+    num: "5", month: "ЈУЛ", day: "Недела",
     title: "Последна вечера во Салерно",
     sub: "Одмор, шопинг, прощална вечера",
     icon: "🌙",
     tags: ["food"],
     items: [
       "Утро: <strong>пазар</strong> во Салерно — локална храна, сувенири",
-      "Оддолни купувања во Via Roma",
+      "Оддолни купувања во <a href='https://maps.google.com/?q=Via+Roma+Salerno+Italy' target='_blank' class='pl'>Via Roma</a>",
       "Попладне: одмор, спремање куфери",
       "Вечера: <strong>прощална вечера</strong> во Салерно — без журба",
-      "Препорака: Ristorante Il Brigante или <strong>Vicolo della Neve</strong>",
-      "💡 Последна прошетка по Lungomare навечер"
+      "Препорака: <a href='https://maps.google.com/?q=Ristorante+Il+Brigante+Salerno+Italy' target='_blank' class='pl'>Ristorante Il Brigante</a> или <strong><a href='https://maps.google.com/?q=Vicolo+della+Neve+Salerno+Italy' target='_blank' class='pl'>Vicolo della Neve</a></strong>",
+      "💡 Последна прошетка по <a href='https://maps.google.com/?q=Lungomare+Trieste+Salerno+Italy' target='_blank' class='pl'>Lungomare</a> навечер"
     ]
   },
   {
-    num: "6", month: "ЈУЛ", day: "Недела",
+    num: "6", month: "ЈУЛ", day: "Понеделник",
     title: "Замина — Напол Аеродром",
     sub: "Checkout · Воз 15:30 · Лет 18:45",
     icon: "✈️",
     tags: ["transport"],
     items: [
       "Утро: <strong>checkout</strong> — остави багаж на рецепција",
-      "Последно кафе на Lungomare",
-      "<strong>⚠️ Воз Салерно→Напол Централе</strong> најдоцна <strong>15:30</strong>",
-      "Алибус или метро до аеродром (пристигни до <strong>16:45</strong>!)",
+      "Последно кафе на <a href='https://maps.google.com/?q=Lungomare+Trieste+Salerno+Italy' target='_blank' class='pl'>Lungomare</a>",
+      "<strong>⚠️ Воз Салерно→<a href='https://maps.google.com/?q=Napoli+Centrale+Station+Italy' target='_blank' class='pl'>Напол Централе</a></strong> најдоцна <strong>15:30</strong>",
+      "Алибус или метро до <a href='https://maps.google.com/?q=Naples+Capodichino+Airport+Italy' target='_blank' class='pl'>аеродром</a> (пристигни до <strong>16:45</strong>!)",
       "Лет NAP→SKP: <strong>18:45</strong>",
       "Arrivederci Italia! 🇮🇹❤️"
     ]
@@ -880,13 +883,15 @@ PODATOCI ZA OVA PATUVANJE:
 - Smestuvanje: Salerno blizu zeleznicka, REZERVIRANO, 7 nokjevanja
 - Feri prevoz: Grasi Junior Ferries za site ruti
 - Feri ceni: Salerno↔Amalfi A/R €70 (3 luga), Salerno→Positano→Capri→Salerno €180 (3 luga) - vkupno €250
-- Plazi: Vietri, Spiaggia Amalfi, Spiaggia Grande Positano (plakjanje), Pestum (pesok!), Lido Azzurro Salerno
+- Plazi: Vietri, Spiaggia Amalfi, Spiaggia Fornillo Positano (potivka), Spiaggia Grande Positano, Lido Azzurro Salerno, Spiaggia Torrione Salerno
 - Blue Grotto Capri: €14 vleznica + €18 camec/lice, odi RANO NAUTRO
+- Capri aktivnosti: Blue Grotto, Capri Town (Piazzetta), Gardens of Augustus, Anacapri + Vila San Michele, Arco Naturale
+- Capri: SKUPO - jadi pred da otides, kupuvaj limonchelo vo Anacapri
 - Restorani Salerno: Vicolo della Neve, Il Brigante, Lungomare za vecer
-- Restorani Amalfi: Da Gemma, Le Arcate (poevtino)
-- Positano: Lo Guarracino (pogled + razumni ceni)
-- Capri: SKUPO - jadi pred da otides
-- Pestum: 30 min voz od Salerno, €4/lice, hramovi + pesocni plazi - SKRIEN BISER
+- Restorani Amalfi: Da Gemma, Le Arcate (poevtino), Il Mulino (lokalno), Santa Croce plaza (izlezuvaj od lukatot)
+- Amalfi aktivnosti: Museo della Carta (€5, papirnica od 13 vek), Valle delle Ferriere (planinska pateka, besplatno)
+- Positano: Lo Guarracino (pogled + razumni ceni), sandali po mera (lokalen zanat), Via Positanesi d'America
+- Cetara (Den 4): rbarsko selo 15 min voz od Salerno, probaj colatura di alici, potivka plaza
 - Alibus Napoli aerodr→Napoli Centrale: €5/lice, 20 min
 - Voz Napoli→Salerno: ~45 min, €6/lice
 

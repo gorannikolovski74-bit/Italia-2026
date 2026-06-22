@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const { execSync } = require('child_process');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = 3000;
@@ -67,6 +69,27 @@ app.post('/api/chat', async (req, res) => {
     console.error('Anthropic proxy error:', err);
     res.status(502).json({ error: 'Failed to reach Anthropic API' });
   }
+});
+
+// ── GitHub Auto-Deploy Webhook ───────────────────────────────────────
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'italia2026deploy';
+
+app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+  const sig = req.headers['x-hub-signature-256'];
+  const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+  const digest = 'sha256=' + hmac.update(req.body).digest('hex');
+  if (sig !== digest) return res.status(401).send('Unauthorized');
+
+  res.json({ ok: true });
+  setTimeout(() => {
+    try {
+      execSync('cd /root/italia-2026 && git pull origin main', { stdio: 'inherit' });
+      execSync('pm2 restart italia-2026', { stdio: 'inherit' });
+      console.log('[webhook] Deploy successful');
+    } catch (e) {
+      console.error('[webhook] Deploy error:', e.message);
+    }
+  }, 100);
 });
 
 app.get('*', (req, res) => {

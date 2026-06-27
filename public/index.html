@@ -466,8 +466,35 @@ body {
 @media (max-width: 800px) {
   .main { grid-template-columns: 1fr; height: auto; }
   .agent-panel { height: 80vh; border-top: 1px solid var(--border); }
-  .header { flex-direction: column; gap: 12px; align-items: flex-start; }
+
+  /* HEADER */
+  .header { flex-direction: column; gap: 10px; align-items: flex-start; padding: 1rem 1rem 1rem; }
+  .header-left h1 { font-size: 1.8rem; }
+  .header-badges { gap: 6px; }
+  .badge { font-size: 0.66rem; padding: 5px 10px; }
+
+  /* PANELS */
+  .itinerary-panel { padding: 1rem; }
+
+  /* FLIGHTS */
   .flights-row { grid-template-columns: 1fr; }
+
+  /* BUDGET — hide bar, wrap label */
+  .budget-item { grid-template-columns: 1fr auto; gap: 6px; align-items: start; }
+  .budget-bar-wrap { display: none; }
+  .budget-item-label { font-size: 0.72rem; white-space: normal; line-height: 1.4; }
+  .budget-item-val { font-size: 0.78rem; white-space: nowrap; margin-top: 2px; }
+
+  /* FERRY TABLE — 2 columns on mobile */
+  .ferry-row { grid-template-columns: 1fr 1fr; gap: 4px; font-size: 0.7rem; padding: 8px 12px; }
+  .ferry-row.head { display: none; }
+  .ferry-company { grid-column: 1; color: var(--blue); font-size: 0.65rem; }
+  .ferry-price { grid-column: 2; text-align: right; }
+  .ferry-from::after { content: ' →'; color: var(--text3); }
+
+  /* LINKS GRID */
+  .links-grid { grid-template-columns: 1fr; }
+  .link-name { font-size: 0.74rem; }
 }
 
 /* Animations */

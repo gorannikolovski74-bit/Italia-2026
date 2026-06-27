@@ -542,7 +542,7 @@ body {
       <div class="budget-items">
         <div class="budget-item">
           <div class="budget-item-label">🍝 Храна (7 дена)</div>
-          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:100%;background:#2a9d5c"></div></div>
+          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:56%;background:#2a9d5c"></div></div>
           <div class="budget-item-val">€1,000</div>
         </div>
         <div class="budget-item">
@@ -566,14 +566,14 @@ body {
           <div class="budget-item-val">€180</div>
         </div>
         <div class="budget-item">
-          <div class="budget-item-label">🎒 Резерва</div>
-          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:20%;background:#3a6e50"></div></div>
-          <div class="budget-item-val">€200</div>
+          <div class="budget-item-label">🎒 Резерва (нераспределено)</div>
+          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:26%;background:#3a6e50"></div></div>
+          <div class="budget-item-val">€476</div>
         </div>
         <div class="budget-item" style="border-top:1px solid rgba(78,202,127,0.12);padding-top:8px;margin-top:2px">
-          <div class="budget-item-label" style="color:#4eca7f;font-weight:500">✅ Вкупно проценето</div>
-          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:85%;background:#4eca7f"></div></div>
-          <div class="budget-item-val" style="color:#4eca7f;font-weight:500">~€1,524</div>
+          <div class="budget-item-label" style="color:#4eca7f;font-weight:500">✅ Вкупно буџет</div>
+          <div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:100%;background:#4eca7f"></div></div>
+          <div class="budget-item-val" style="color:#4eca7f;font-weight:500">€1,800</div>
         </div>
       </div>
     </div>
@@ -1162,7 +1162,7 @@ async function deleteBookmark(id) {
 }
 
 // ── Expenses tracker (server-synced) ─────────────────────────────────
-const PLANNED_BUDGET = 1524; // ~ планиран буџет (без сместување, веќе платено)
+const PLANNED_BUDGET = 1800; // вкупен буџет за тројца (без сместување, веќе платено)
 
 async function loadExpenses() {
   try {

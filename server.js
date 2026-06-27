@@ -24,6 +24,34 @@ function saveBookmarks(list) {
   fs.writeFileSync(BOOKMARKS_FILE, JSON.stringify(list, null, 2), 'utf8');
 }
 
+// ── GitHub Auto-Deploy Webhook (must be BEFORE express.json) ──────────
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'italia2026deploy';
+
+app.post('/webhook', express.raw({ type: '*/*' }), (req, res) => {
+  const sig = req.headers['x-hub-signature-256'] || '';
+  const body = Buffer.isBuffer(req.body) ? req.body : Buffer.from('');
+  const digest = 'sha256=' + crypto.createHmac('sha256', WEBHOOK_SECRET).update(body).digest('hex');
+
+  let valid = false;
+  try {
+    valid = sig.length === digest.length &&
+      crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(digest));
+  } catch (e) { valid = false; }
+
+  if (!valid) return res.status(401).send('Unauthorized');
+
+  res.json({ ok: true });
+  setTimeout(() => {
+    try {
+      execSync('git pull origin main', { cwd: __dirname, stdio: 'inherit' });
+      execSync('pm2 restart italia-2026', { stdio: 'inherit' });
+      console.log('[webhook] Deploy successful');
+    } catch (e) {
+      console.error('[webhook] Deploy error:', e.message);
+    }
+  }, 100);
+});
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -69,27 +97,6 @@ app.post('/api/chat', async (req, res) => {
     console.error('Anthropic proxy error:', err);
     res.status(502).json({ error: 'Failed to reach Anthropic API' });
   }
-});
-
-// ── GitHub Auto-Deploy Webhook ───────────────────────────────────────
-const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'italia2026deploy';
-
-app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
-  const sig = req.headers['x-hub-signature-256'];
-  const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
-  const digest = 'sha256=' + hmac.update(req.body).digest('hex');
-  if (sig !== digest) return res.status(401).send('Unauthorized');
-
-  res.json({ ok: true });
-  setTimeout(() => {
-    try {
-      execSync('cd /root/italia-2026 && git pull origin main', { stdio: 'inherit' });
-      execSync('pm2 restart italia-2026', { stdio: 'inherit' });
-      console.log('[webhook] Deploy successful');
-    } catch (e) {
-      console.error('[webhook] Deploy error:', e.message);
-    }
-  }, 100);
 });
 
 app.get('*', (req, res) => {

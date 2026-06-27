@@ -11,6 +11,20 @@ const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const BOOKMARKS_FILE = path.join(__dirname, 'bookmarks.json');
 const EXPENSES_FILE = path.join(__dirname, 'expenses.json');
+const CHAT_FILE = path.join(__dirname, 'chat.json');
+
+function loadChat() {
+  try {
+    if (fs.existsSync(CHAT_FILE)) {
+      return JSON.parse(fs.readFileSync(CHAT_FILE, 'utf8'));
+    }
+  } catch (e) {}
+  return { history: [], display: [], updatedAt: 0 };
+}
+
+function saveChat(data) {
+  fs.writeFileSync(CHAT_FILE, JSON.stringify(data, null, 2), 'utf8');
+}
 
 function loadBookmarks() {
   try {
@@ -114,6 +128,27 @@ app.post('/api/expenses', (req, res) => {
 app.delete('/api/expenses/:id', (req, res) => {
   const list = loadExpenses().filter(e => e.id !== req.params.id);
   saveExpenses(list);
+  res.json({ ok: true });
+});
+
+// ── Chat history (synced across devices) ─────────────────────────────
+app.get('/api/chat-history', (req, res) => {
+  res.json(loadChat());
+});
+
+app.post('/api/chat-history', (req, res) => {
+  const { history, display } = req.body;
+  const data = {
+    history: Array.isArray(history) ? history : [],
+    display: Array.isArray(display) ? display : [],
+    updatedAt: Date.now()
+  };
+  saveChat(data);
+  res.json({ ok: true, updatedAt: data.updatedAt });
+});
+
+app.delete('/api/chat-history', (req, res) => {
+  saveChat({ history: [], display: [], updatedAt: Date.now() });
   res.json({ ok: true });
 });
 

@@ -966,52 +966,88 @@ VAZNO - LINKOVI: Koga spomenuvas lokacija, restoran, plaza ili atrakcija, SEKOGA
 let history = [];
 let busy = false;
 
-// ── Session persistence ──────────────────────────────────────────────
-function saveSession() {
-  localStorage.setItem('it26_history', JSON.stringify(history));
+// ── Session persistence (server-synced across devices) ───────────────
+let lastSync = 0;
+
+function collectDisplay() {
   const msgs = [];
   document.querySelectorAll('#chatMessages .msg').forEach(m => {
+    if (m.id === 'typing') return;
     const isUser = m.classList.contains('user');
     const bubble = m.querySelector('.bubble');
     if (bubble) msgs.push({role: isUser ? 'user' : 'ai', html: bubble.innerHTML});
   });
-  localStorage.setItem('it26_display', JSON.stringify(msgs));
+  return msgs;
 }
 
-function clearSession() {
-  localStorage.removeItem('it26_history');
-  localStorage.removeItem('it26_display');
-  history = [];
+function renderDisplay(msgs) {
   const chat = document.getElementById('chatMessages');
-  chat.innerHTML = '<div class="msg"><div class="msg-av ai">🇮🇹</div><div class="bubble ai">Нова сесија почнала. Прашај ме нешто 🇮🇹</div></div>';
+  chat.innerHTML = '';
+  msgs.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'msg' + (m.role === 'user' ? ' user' : '');
+    const av = document.createElement('div');
+    av.className = 'msg-av ' + (m.role === 'user' ? 'u' : 'ai');
+    av.textContent = m.role === 'user' ? 'Ти' : '🇮🇹';
+    const b = document.createElement('div');
+    b.className = 'bubble ' + (m.role === 'user' ? 'user-b' : 'ai');
+    b.innerHTML = m.html;
+    div.appendChild(av); div.appendChild(b);
+    chat.appendChild(div);
+  });
+  chat.scrollTop = chat.scrollHeight;
+}
+
+async function saveSession() {
+  const display = collectDisplay();
+  try {
+    const res = await fetch('/api/chat-history', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ history, display })
+    });
+    const data = await res.json();
+    if (data.updatedAt) lastSync = data.updatedAt;
+  } catch(e) {}
+}
+
+async function clearSession() {
+  history = [];
+  try { await fetch('/api/chat-history', {method:'DELETE'}); } catch(e) {}
+  lastSync = Date.now();
+  document.getElementById('chatMessages').innerHTML =
+    '<div class="msg"><div class="msg-av ai">🇮🇹</div><div class="bubble ai">Нова сесија почнала. Прашај ме нешто 🇮🇹</div></div>';
+}
+
+async function loadServerChat() {
+  try {
+    const res = await fetch('/api/chat-history');
+    const data = await res.json();
+    lastSync = data.updatedAt || 0;
+    if (data.display && data.display.length > 0) {
+      history = data.history || [];
+      renderDisplay(data.display);
+    }
+  } catch(e) {}
+}
+
+// poll so messages from the other device appear automatically
+async function syncCheck() {
+  if (busy) return; // don't disrupt while awaiting a reply
+  try {
+    const res = await fetch('/api/chat-history');
+    const data = await res.json();
+    if (data.updatedAt && data.updatedAt > lastSync) {
+      lastSync = data.updatedAt;
+      history = data.history || [];
+      if (data.display && data.display.length > 0) renderDisplay(data.display);
+    }
+  } catch(e) {}
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  const savedHistory = localStorage.getItem('it26_history');
-  const savedDisplay = localStorage.getItem('it26_display');
-  if (savedHistory && savedDisplay) {
-    try {
-      history = JSON.parse(savedHistory);
-      const msgs = JSON.parse(savedDisplay);
-      if (msgs.length > 0) {
-        const chat = document.getElementById('chatMessages');
-        chat.innerHTML = '';
-        msgs.forEach(m => {
-          const div = document.createElement('div');
-          div.className = 'msg' + (m.role === 'user' ? ' user' : '');
-          const av = document.createElement('div');
-          av.className = 'msg-av ' + (m.role === 'user' ? 'u' : 'ai');
-          av.textContent = m.role === 'user' ? 'Ти' : '🇮🇹';
-          const b = document.createElement('div');
-          b.className = 'bubble ' + (m.role === 'user' ? 'user-b' : 'ai');
-          b.innerHTML = m.html;
-          div.appendChild(av); div.appendChild(b);
-          chat.appendChild(div);
-        });
-        chat.scrollTop = chat.scrollHeight;
-      }
-    } catch(e) { localStorage.removeItem('it26_history'); localStorage.removeItem('it26_display'); }
-  }
+  loadServerChat();
+  setInterval(syncCheck, 6000);
 });
 
 // ── Render text with links ───────────────────────────────────────────

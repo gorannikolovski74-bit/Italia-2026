@@ -10,6 +10,7 @@ const PORT = 3000;
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const BOOKMARKS_FILE = path.join(__dirname, 'bookmarks.json');
+const EXPENSES_FILE = path.join(__dirname, 'expenses.json');
 
 function loadBookmarks() {
   try {
@@ -22,6 +23,19 @@ function loadBookmarks() {
 
 function saveBookmarks(list) {
   fs.writeFileSync(BOOKMARKS_FILE, JSON.stringify(list, null, 2), 'utf8');
+}
+
+function loadExpenses() {
+  try {
+    if (fs.existsSync(EXPENSES_FILE)) {
+      return JSON.parse(fs.readFileSync(EXPENSES_FILE, 'utf8'));
+    }
+  } catch (e) {}
+  return [];
+}
+
+function saveExpenses(list) {
+  fs.writeFileSync(EXPENSES_FILE, JSON.stringify(list, null, 2), 'utf8');
 }
 
 // ── GitHub Auto-Deploy Webhook (must be BEFORE express.json) ──────────
@@ -73,6 +87,33 @@ app.post('/api/bookmarks', (req, res) => {
 app.delete('/api/bookmarks/:id', (req, res) => {
   const list = loadBookmarks().filter(b => b.id !== req.params.id);
   saveBookmarks(list);
+  res.json({ ok: true });
+});
+
+// ── Expenses API ─────────────────────────────────────────────────────
+app.get('/api/expenses', (req, res) => {
+  res.json(loadExpenses());
+});
+
+app.post('/api/expenses', (req, res) => {
+  const { date, category, label, amount } = req.body;
+  if (!label || amount == null) return res.status(400).json({ error: 'label and amount required' });
+  const list = loadExpenses();
+  const item = {
+    id: Date.now().toString(),
+    date: date || new Date().toISOString().slice(0, 10),
+    category: category || 'Друго',
+    label,
+    amount: Number(amount)
+  };
+  list.push(item);
+  saveExpenses(list);
+  res.json(item);
+});
+
+app.delete('/api/expenses/:id', (req, res) => {
+  const list = loadExpenses().filter(e => e.id !== req.params.id);
+  saveExpenses(list);
   res.json({ ok: true });
 });
 

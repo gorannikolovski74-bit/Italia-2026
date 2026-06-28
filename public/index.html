@@ -1158,22 +1158,28 @@ async function sendMsg() {
   inp.value = ''; inp.style.height = 'auto';
 
   // Build user content (text + optional image)
-  let userContent;
+  let msgForApi;   // full content sent to API (may include base64)
+  let msgForHistory; // lightweight version stored in history
+  const userText = text || 'Преведи ја оваа слика и опиши ја.';
+
   if (pendingImage) {
-    userContent = [];
-    userContent.push({ type: 'image', source: { type: 'base64', media_type: pendingImage.mediaType, data: pendingImage.base64 }});
-    if (text) userContent.push({ type: 'text', text });
-    else userContent.push({ type: 'text', text: 'Преведи ја оваа слика и опиши ја.' });
-    // Show image preview in bubble
-    const previewHtml = `<img src="data:${pendingImage.mediaType};base64,${pendingImage.base64}" style="max-width:100%;border-radius:6px;margin-bottom:4px">` + (text ? `<br>${text}` : '');
+    msgForApi = [
+      { type: 'image', source: { type: 'base64', media_type: pendingImage.mediaType, data: pendingImage.base64 }},
+      { type: 'text', text: userText }
+    ];
+    msgForHistory = userText; // don't keep base64 in history
+    const previewHtml = `<img src="data:${pendingImage.mediaType};base64,${pendingImage.base64}" style="max-width:100%;border-radius:6px;margin-bottom:4px"><br><span style="font-size:0.75rem;opacity:0.8">${text || ''}</span>`;
     addBubble('user', previewHtml, true);
     clearImage();
   } else {
-    userContent = text;
+    msgForApi = text;
+    msgForHistory = text;
     addBubble('user', text);
   }
 
-  history.push({role:'user', content: userContent});
+  // Build messages array: history (without current) + current with full content
+  const messagesForApi = [...history, {role:'user', content: msgForApi}];
+  history.push({role:'user', content: msgForHistory});
   showTyping();
 
   try {
@@ -1184,12 +1190,12 @@ async function sendMsg() {
         model: 'claude-sonnet-4-5',
         max_tokens: 1024,
         system: SYSTEM,
-        messages: history
+        messages: messagesForApi
       })
     });
     const data = await res.json();
     removeTyping();
-    const reply = data.content?.map(b=>b.text||'').join('') || 'Грешка. Обиди се.';
+    const reply = data.content?.map(b=>b.text||'').join('') || data.error?.message || 'Грешка. Обиди се.';
     addBubble('ai', reply);
     history.push({role:'assistant', content: reply});
     saveSession();

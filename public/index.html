@@ -634,10 +634,13 @@ body {
 
     <!-- REAL EXPENSES TRACKER -->
     <div class="budget-section" style="margin-bottom:1.6rem">
-      <div class="budget-header">
-        <div class="budget-title">💰 Реални трошоци</div>
-        <button onclick="document.getElementById('expForm').style.display=document.getElementById('expForm').style.display==='none'?'flex':'none'" style="background:var(--accent2);border:none;border-radius:6px;color:white;font-size:0.72rem;padding:4px 10px;cursor:pointer">+ Додај</button>
+      <div class="budget-header" style="cursor:pointer" onclick="toggleExpSection()">
+        <div class="budget-title">💰 Реални трошоци <span id="expToggleIcon" style="font-size:0.7rem;color:var(--text3)">▼ прикажи</span></div>
+        <button onclick="event.stopPropagation();document.getElementById('expForm').style.display=document.getElementById('expForm').style.display==='none'?'flex':'none'" style="background:var(--accent2);border:none;border-radius:6px;color:white;font-size:0.72rem;padding:4px 10px;cursor:pointer">+ Додај</button>
       </div>
+
+      <!-- collapsible body -->
+      <div id="expBody" style="display:none">
 
       <!-- comparison summary -->
       <div id="expSummary" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap"></div>
@@ -660,6 +663,8 @@ body {
 
       <!-- list -->
       <div id="expList" style="display:flex;flex-direction:column;gap:6px"></div>
+
+      </div><!-- /expBody -->
     </div>
 
     <!-- FERRY TABLE -->
@@ -1371,6 +1376,14 @@ function toggleExpList() {
   const el = document.getElementById('expList');
   el.dataset.expanded = el.dataset.expanded === '1' ? '0' : '1';
   loadExpenses();
+}
+
+function toggleExpSection() {
+  const body = document.getElementById('expBody');
+  const icon = document.getElementById('expToggleIcon');
+  const open = body.style.display === 'none';
+  body.style.display = open ? 'block' : 'none';
+  icon.textContent = open ? '▲ скриј' : '▼ прикажи';
 }
 
 async function addExpense() {

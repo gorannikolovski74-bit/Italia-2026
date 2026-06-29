@@ -1344,15 +1344,33 @@ function renderExpenses(list) {
     return;
   }
   const sorted = [...list].sort((a,b) => (b.date||'').localeCompare(a.date||'') || b.id.localeCompare(a.id));
-  el.innerHTML = sorted.map(e => `
-    <div style="display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:9px 12px">
+  const SHOW = 5;
+  const showAll = el.dataset.expanded === '1';
+  const visible = showAll ? sorted : sorted.slice(0, SHOW);
+  const hidden = sorted.length - SHOW;
+
+  const rowHtml = visible.map(e => `
+    <div style="display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 12px">
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.78rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.label}</div>
-        <div style="font-size:0.64rem;color:var(--text3);margin-top:1px">${e.category||'Друго'} · ${e.date||''}</div>
+        <div style="font-size:0.76rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.label}</div>
+        <div style="font-size:0.62rem;color:var(--text3);margin-top:1px">${e.category||'Друго'} · ${e.date||''}</div>
       </div>
-      <div style="font-size:0.82rem;color:var(--gold2);font-weight:500;white-space:nowrap">€${Number(e.amount).toFixed(2)}</div>
+      <div style="font-size:0.8rem;color:var(--gold2);font-weight:500;white-space:nowrap">€${Number(e.amount).toFixed(2)}</div>
       <button onclick="deleteExpense('${e.id}')" style="background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:0.85rem;padding:0 2px" title="Избриши">×</button>
     </div>`).join('');
+
+  const toggleBtn = sorted.length > SHOW ? `
+    <button onclick="toggleExpList()" style="width:100%;background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px;color:var(--text3);font-size:0.7rem;cursor:pointer;margin-top:4px">
+      ${showAll ? '▲ Прикажи помалку' : `▼ Прикажи сите (${sorted.length}) — уште ${hidden} скриени`}
+    </button>` : '';
+
+  el.innerHTML = rowHtml + toggleBtn;
+}
+
+function toggleExpList() {
+  const el = document.getElementById('expList');
+  el.dataset.expanded = el.dataset.expanded === '1' ? '0' : '1';
+  loadExpenses();
 }
 
 async function addExpense() {

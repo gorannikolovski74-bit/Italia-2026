@@ -181,10 +181,10 @@ Link(id, tripId, name, url, desc, updatedAt, deleted)
 - [ ] Тема со боите од §1.4
 - [ ] CI: GitHub Actions за `./gradlew assembleDebug` (APK artifact за тестирање!)
 
-### Фаза 1 — Backend v1 (1 сесија)
-- [ ] `server.js`: SQLite + `/api/v1/trips` CRUD + Bearer token auth
-- [ ] Migration скрипта: сегашните JSON фајлови → SQLite (Italia 2026 станува првото патување)
-- [ ] Дашбордот продолжува да работи
+### Фаза 1 — Backend v1 (1 сесија) ✅ завршена (во branch `feature/api-v1-trips-sqlite`, чека merge)
+- [x] `server.js`: SQLite + `/api/v1/trips` CRUD + Bearer token auth
+- [x] Migration скрипта: сегашните JSON фајлови → SQLite (Italia 2026 станува првото патување)
+- [x] Дашбордот продолжува да работи (старите rути и JSON фајлови се непроменети)
 
 ### Фаза 2 — App core (2-3 сесии)
 - [ ] Trips листа + креирање патување

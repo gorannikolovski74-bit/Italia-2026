@@ -6,6 +6,7 @@ const router = express.Router();
 
 const selectTrip = db.prepare('SELECT * FROM trips WHERE id = ? AND deleted = 0');
 const selectAllTrips = db.prepare('SELECT * FROM trips WHERE deleted = 0 ORDER BY updatedAt DESC');
+const selectAnyTripById = db.prepare('SELECT id FROM trips WHERE id = ?');
 const insertTrip = db.prepare(`
   INSERT INTO trips (id, name, destination, startDate, endDate, travelers, currency, budgetTotal, updatedAt, deleted)
   VALUES (@id, @name, @destination, @startDate, @endDate, @travelers, @currency, @budgetTotal, @updatedAt, 0)
@@ -46,8 +47,17 @@ router.post('/', (req, res) => {
   const error = validateTripBody(req.body);
   if (error) return res.status(400).json({ error });
 
+  // The mobile client generates the id offline (Room needs a stable primary
+  // key before the server confirms the row), so honor a client-supplied id
+  // instead of always minting our own — otherwise the local and remote
+  // copies of the same trip would end up under different ids.
+  const id = typeof req.body.id === 'string' && req.body.id.trim() ? req.body.id : crypto.randomUUID();
+  if (selectAnyTripById.get(id)) {
+    return res.status(409).json({ error: 'Trip with this id already exists' });
+  }
+
   const trip = {
-    id: crypto.randomUUID(),
+    id,
     name: req.body.name,
     destination: req.body.destination,
     startDate: req.body.startDate,

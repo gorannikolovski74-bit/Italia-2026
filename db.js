@@ -19,6 +19,18 @@ db.exec(`
     updatedAt INTEGER NOT NULL,
     deleted INTEGER NOT NULL DEFAULT 0
   );
+
+  -- Text-only history for cross-device sync (§3.7: images are never persisted
+  -- or replayed here, only sent once per turn straight through to Anthropic).
+  CREATE TABLE IF NOT EXISTS chat_messages (
+    id TEXT PRIMARY KEY,
+    tripId TEXT NOT NULL,
+    role TEXT NOT NULL,
+    content TEXT NOT NULL,
+    hasImage INTEGER NOT NULL DEFAULT 0,
+    createdAt INTEGER NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_chat_messages_tripId ON chat_messages(tripId);
 `);
 
 module.exports = db;

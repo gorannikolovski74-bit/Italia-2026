@@ -5,6 +5,7 @@ const { execSync } = require('child_process');
 const crypto = require('crypto');
 const { requireApiToken } = require('./auth');
 const tripsRouter = require('./routes/trips');
+const chatRouter = require('./routes/chat');
 
 const app = express();
 const PORT = 3000;
@@ -179,6 +180,7 @@ app.post('/api/chat', async (req, res) => {
 
 // ── API v1 (SQLite-backed, Bearer token auth) ─────────────────────────
 app.use('/api/v1/trips', requireApiToken, tripsRouter);
+app.use('/api/v1/chat', requireApiToken, chatRouter);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

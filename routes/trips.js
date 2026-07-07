@@ -19,6 +19,12 @@ const updateTrip = db.prepare(`
 `);
 const softDeleteTrip = db.prepare('UPDATE trips SET deleted = 1, updatedAt = ? WHERE id = ? AND deleted = 0');
 
+const selectChatMessages = db.prepare('SELECT * FROM chat_messages WHERE tripId = ? ORDER BY createdAt ASC');
+const insertChatMessage = db.prepare(`
+  INSERT INTO chat_messages (id, tripId, role, content, hasImage, createdAt)
+  VALUES (@id, @tripId, @role, @content, @hasImage, @createdAt)
+`);
+
 function validateTripBody(body) {
   const { name, destination, startDate, endDate, travelers, currency, budgetTotal } = body;
   if (typeof name !== 'string' || !name.trim()) return 'name is required';
@@ -99,6 +105,34 @@ router.delete('/:id', (req, res) => {
 
   softDeleteTrip.run(Date.now(), req.params.id);
   res.json({ ok: true });
+});
+
+// ── Chat history sync (text-only, images are never persisted here) ───
+router.get('/:id/chat', (req, res) => {
+  const trip = selectTrip.get(req.params.id);
+  if (!trip) return res.status(404).json({ error: 'Trip not found' });
+
+  res.json(selectChatMessages.all(req.params.id));
+});
+
+router.post('/:id/chat', (req, res) => {
+  const trip = selectTrip.get(req.params.id);
+  if (!trip) return res.status(404).json({ error: 'Trip not found' });
+
+  const { role, content, hasImage } = req.body;
+  if (role !== 'user' && role !== 'assistant') return res.status(400).json({ error: 'role must be "user" or "assistant"' });
+  if (typeof content !== 'string' || !content.trim()) return res.status(400).json({ error: 'content is required' });
+
+  const message = {
+    id: crypto.randomUUID(),
+    tripId: req.params.id,
+    role,
+    content,
+    hasImage: hasImage ? 1 : 0,
+    createdAt: Date.now(),
+  };
+  insertChatMessage.run(message);
+  res.status(201).json(message);
 });
 
 module.exports = router;

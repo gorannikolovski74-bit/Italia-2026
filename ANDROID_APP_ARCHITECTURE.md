@@ -10,10 +10,11 @@
 
 ### 1.1 Постоечки систем (web dashboard)
 - **Repo:** `gorannikolovski74-bit/Italia-2026` (GitHub)
-- **Production сервер:** DigitalOcean droplet `157.245.207.38:3000`
+- **Production сервер:** DigitalOcean droplet `CloudPC2`, Reserved IP `146.190.202.161:3000`
+  (пред `157.245.207.38` — ephemeral IP, заменета со Reserved IP за да преживее droplet snapshot/recreate)
 - **Stack:** Node.js + Express (`server.js`), еден HTML фајл (`public/index.html`) со inline CSS/JS
 - **Process manager:** PM2, процес `italia-2026`
-- **Auto-deploy:** GitHub webhook → POST `http://157.245.207.38:3000/webhook`
+- **Auto-deploy:** GitHub webhook → POST `http://146.190.202.161:3000/webhook`
   (HMAC-SHA256, secret env `WEBHOOK_SECRET`, default `italia2026deploy`) → `git pull origin main` + `pm2 restart italia-2026`
 - **Работен тек:** Claude Code (web) → push на `main` → авто-деплој. Без SSH, без VSCode.
 

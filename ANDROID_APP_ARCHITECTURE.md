@@ -4,17 +4,42 @@
 > за да се изгради Android апликација „AI Tourist Agent" врз основа на постоечкиот
 > Italia-2026 web dashboard. Новата сесија треба да го прочита ова ПРВО.
 
+## ⏸️ ПАУЗИРАНО (22.07.2026) — production droplet е уништен
+
+Droplet-от `CloudPC2` (го хостираше Italia-2026 dashboard + MKB2B + оваа AI Tourist Agent
+backend работа, сите на ист сервер) е **избришан** заради трошоци. Состојба:
+
+- ✅ **Snapshot "CloudPC2" зачуван** (~$0.39/месечно) — содржи целосна слика на серверот
+  во моментот на бришење (сите 3 проекти, `.env` фајлови, JSON/SQLite податоци)
+- ❌ **Reserved IP `146.190.202.161` ослободена** (не се наплатува повеќе, но веќе не е наша)
+- ❌ Droplet-от, Italia-2026 dashboard-от, MKB2B, и AI Tourist Agent backend-от (PR #1 во
+  овој repo, сè уште неmerge-нат) се сите **офлајн**
+
+**За да продолжиш:**
+1. DigitalOcean → Images → Snapshots → создади нов Droplet од snapshot-от "CloudPC2"
+2. Networking → Reserved IPs → резервирај нова IP и прикачи ја на новиот droplet
+   (droplet-овата сопствена ephemeral IP НЕ може да се "конвертира" во Reserved IP —
+   секогаш е нова адреса, види ги commit-ите од 22.07.2026 за целосниот процес)
+3. Ажурирај ја новата IP на 3 места: GitHub webhook payload URL (Settings → Webhooks во
+   овој repo), `NetworkModule.kt` + `network_security_config.xml` во AI-Tourist-Agent
+   Android репото, и провери дали MKB2B-то (`gorannikolovski74-bit/macedonia-b2b`) некаде
+   ја користи (не најдовме hardcoded референци при последната проверка, но провери го
+   production `.env`-то на серверот)
+4. Постави `API_TOKEN` во `.env` на новиот droplet (види §3.3) пред да го merge-неш PR #1
+
 ---
 
 ## 1. Контекст — што постои сега
 
 ### 1.1 Постоечки систем (web dashboard)
 - **Repo:** `gorannikolovski74-bit/Italia-2026` (GitHub)
-- **Production сервер:** DigitalOcean droplet `CloudPC2`, Reserved IP `146.190.202.161:3000`
-  (пред `157.245.207.38` — ephemeral IP, заменета со Reserved IP за да преживее droplet snapshot/recreate)
+- **Production сервер:** DigitalOcean droplet `CloudPC2` — **тековно избришан, види ⏸️ горе**.
+  Последна позната адреса: Reserved IP `146.190.202.161:3000` (ослободена при бришењето);
+  пред неа `157.245.207.38` (ephemeral IP на оригиналниот droplet).
 - **Stack:** Node.js + Express (`server.js`), еден HTML фајл (`public/index.html`) со inline CSS/JS
 - **Process manager:** PM2, процес `italia-2026`
-- **Auto-deploy:** GitHub webhook → POST `http://146.190.202.161:3000/webhook`
+- **Auto-deploy:** GitHub webhook → POST `http://<ip>:3000/webhook` (IP се менува по секое
+  рестаурирање од snapshot — ажурирај го во GitHub repo Settings → Webhooks)
   (HMAC-SHA256, secret env `WEBHOOK_SECRET`, default `italia2026deploy`) → `git pull origin main` + `pm2 restart italia-2026`
 - **Работен тек:** Claude Code (web) → push на `main` → авто-деплој. Без SSH, без VSCode.
 

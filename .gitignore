@@ -3,3 +3,5 @@ node_modules/
 *.py
 *.log
 italia_index.html
+data.sqlite3
+data.sqlite3-*

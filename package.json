@@ -4,9 +4,11 @@
   "description": "Italia 2026 Family Trip Dashboard",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "migrate": "node migrate.js"
   },
   "dependencies": {
+    "better-sqlite3": "^12.4.1",
     "express": "^4.18.2"
   }
 }
